@@ -31,3 +31,9 @@ XORofAllNumbersInN.java
 -   Every multiple of 4 has the xor value in sequence as the value itself
 -   Hence, number%4 -> remainder 0 = Number; remainder 1= 1; remainder 2 = Number+1; remainder 3= 0;
 
+MaximumAndValue.java
+-   This is a O(N LogN) solution
+-   The idea is to sort the array in descending order then looping to find the first 2 repeating same log2 base values for the number
+-   This re-uses the log2 utility created in the LogBase2.java file
+-   The other approach is to create a bit set of 31 and then checking for the best or value for all numbers in O(N) but kindof gets confusing
+
