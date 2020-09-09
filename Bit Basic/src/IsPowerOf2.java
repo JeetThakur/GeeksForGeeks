@@ -8,6 +8,8 @@ public class IsPowerOf2 {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter the number to check whether it is a power of 2 or not: ");
         long number = sc.nextLong();
+        if(number==1)
+            System.out.println("\\nThe result is: false");
         System.out.println("\nThe result is: " + isPowerOf2(number));
 
     }
