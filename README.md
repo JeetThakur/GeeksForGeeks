@@ -8,7 +8,6 @@ All the learning and practice and challenging problems done via the DSAA Course
 
 ## Modules:
 ## Bit Basic
--> SRC
---> LogBase2.java
-    -> This file is the best way to return the floor(log2(number)) for a long as a return type integer
-    -> Formula used is >> bit operator
+LogBase2.java
+-   This file is the best way to return the floor(log2(number)) for a long as a return type integer
+-   Formula used is >> bit operator
