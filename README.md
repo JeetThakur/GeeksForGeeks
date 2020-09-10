@@ -7,6 +7,18 @@ All the learning and practice and challenging problems done via the DSAA Course
 - Each of this will be documented as we go ahead
 
 ## Modules:
+## Mathematics
+
+AbsoluteValue.java
+-   Simple program using the Math.abs() function available
+
+AdditionUnderModulo.java
+-   This is exposing the forumala of (a+b)%m = ( a%m + b%m ) % m for numbers very large
+
+Exactly3Divisors.java
+-   This is a O(N^1/2*N^1/4) Time complexity solution a very fast approach
+-   The program is aimed at finding numbers present in a range of numbers that only have 3 divisors including 1 and itself
+
 ## Bit Basic
 
 LogBase2.java
