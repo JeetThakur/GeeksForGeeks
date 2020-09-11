@@ -20,7 +20,7 @@ public class FirstSetBit {
         }
         // If not power of 2 or odd keep dividing till we find a 1
         int counter = 1;
-        while( n != 1){
+        while( (n & 1) != 1){
             n = n >> 1;
             counter++;
         }
