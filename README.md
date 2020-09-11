@@ -49,3 +49,10 @@ MaximumAndValue.java
 -   This re-uses the log2 utility created in the LogBase2.java file
 -   The other approach is to create a bit set of 31 and then checking for the best or value for all numbers in O(N) but kindof gets confusing
 
+FirstSetBit.java
+-   This is a O(Log N) solution
+-   The odd numbers are checked with the n & 1 if == 1 then we simply return 1
+-   This leaves us with even numbers
+-   Reducing all powers of 2 using the powerOf2 function we can check for the bit position directly
+-   The leftover even numbers need to be checked for the first possible bit set by anding the number at each division with 1
+-   The above checks still fail for 0 hence check 0 at first and return 0
