@@ -1,7 +1,4 @@
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class DominoDRW {
 
@@ -17,7 +14,7 @@ public class DominoDRW {
 //        }
 
         // Seeded values
-        numbers = new int[]{1,2,2,2,6,2,2,2,2,2,2,2};
+        numbers = new int[]{3,4,3,4,1,2,2,4,6,5,3,5};
         DominoDRW obj = new DominoDRW();
         System.out.println(obj.isDominoPossible(numbers));
     }
@@ -42,65 +39,92 @@ public class DominoDRW {
             putNumber(numbers[i]);
             putNumber(numbers[i+1]);
         }
-        // Now base condition check that number map should have only 2 -> 1 value numbers to perform the pyramid
-        int uniqueNumCounter = 0;
-        int[] uniqueNums = new int[2];
-        for (Map.Entry<Integer, Integer> entry: number.entrySet()){
-            if (entry.getValue() == 1 && uniqueNumCounter < 3) {
-                uniqueNums[uniqueNumCounter] = entry.getKey();
-                uniqueNumCounter++;
-            }
-        }
-        if (uniqueNumCounter != 2){
-            return false;
-        }
 
         // Now base condition that the domino map should have compulsory 1 entry 2 times else false
         // This holds the pair which is the end and the start at the same time
-        int[] dupPair = {0,0};
         int[] tempDup = new int[2];
-        boolean flag = true;
-        for (Map.Entry<int[], Integer> entry: domino.entrySet()){
-            if (entry.getValue() >= 2) {
-                dupPair[0] = entry.getKey()[0];
-                dupPair[1] = entry.getKey()[1];
-                tempDup[0] = dupPair[0];
-                tempDup[1] = dupPair[1];
-
-                int value = entry.getValue() - 1;
-                domino.remove(entry.getKey());
-                domino.put(entry.getKey(), value);
-                flag = false;
-                break;
+        int globalMax = 0;
+        for (Map.Entry<int[], Integer> entry: domino.entrySet()) {
+            if (entry.getValue() > globalMax && number.get(entry.getKey()[0])>=3 && number.get(entry.getKey()[1])>=3 ) {
+                tempDup = entry.getKey();
+                globalMax = entry.getValue();
             }
         }
-        if (flag){
+        if (globalMax == 1){
             return false;
         }
+        // The max pair is now the center tile domino and the one that will end the same domino pyramid
+        int value = globalMax - 2;
+        domino.remove(tempDup);
+        if (value !=0)
+            domino.put(tempDup, value);
 
-        // Now all edge cases are done -- we will now go in and keep removing the domino map
+        //System.out.println("The centeral pair: " + tempDup[0] + " " + tempDup[1]);
 
-//        for (Map.Entry<int[], Integer> entry: domino.entrySet()){
-//            System.out.println(entry.getKey()[0]+" "+ entry.getKey()[1]);
-//        }
-        for (int i=0; i<2; i++){
-            int toFindNext = findNextNumber(uniqueNums[i], -1);
-            int isSameToDup = findNextNumber(toFindNext, uniqueNums[(i+1)%2]);
-            if (isSameToDup == dupPair[0]){
-                dupPair[0] = -1;
-            } else if (isSameToDup == dupPair[1]){
-                dupPair[1] = -1;
+        // Now take the center and find all the numbers
+        // And then for each center value make 2 pass calls to find out the two dominos that can be placed as a bfs solution
+        List<int[]> visited = new ArrayList<>();
+        List<int[]> toVisit = new ArrayList<>();
+        for(int i=0; i<2;i++){
+            boolean flag = true;
+            int centerVal = tempDup[i];
+            // All possible mid layer placements
+            toVisit = findAllPairs(toVisit , centerVal);
+
+            while (flag && !toVisit.isEmpty()){
+                // Only end when we find a placement possible for one more than the one chosen else return false
+                int[] possiblity = toVisit.remove(0);
+
+                if (isPlacable(possiblity, centerVal, visited)){
+                    flag = false;
+                    break;
+                }
+                visited.clear();
             }
+            if (flag){
+                return false;
+            }
+            visited.clear();
+            toVisit.clear();
         }
-        if(dupPair[0] == -1 && dupPair[1]== -1 && domino.size()== 1){
-            for(Map.Entry<int[], Integer> entry: domino.entrySet()){
-                if (entry.getKey()[0] == tempDup[0] && entry.getKey()[1]==tempDup[1])
+
+        return true;
+    }
+
+    boolean isPlacable(int[] possiblity, int centerVal, List<int[]> visited){
+        int toFind;
+        if(possiblity[0] == centerVal)
+            toFind = possiblity[1];
+        else
+            toFind = possiblity[0];
+        visited.add(possiblity);
+        for(Map.Entry<int[], Integer> entry : domino.entrySet()){
+            int[] temp = entry.getKey();
+            int value = entry.getValue();
+            //domino.remove(temp);
+            if( value >1 || !visited.contains(temp)){
+                value = value - 1;
+
+                visited.add(temp);
+                if(temp[0] == toFind || temp[1] == toFind){
+                    domino.put(temp,value);
                     return true;
+                }
             }
+            domino.put(temp,value);
         }
-        System.out.println(domino);
         return false;
     }
+
+    List<int[]> findAllPairs(List<int[]> toVisit, int centerVal){
+        for(Map.Entry<int[] , Integer> entry : domino.entrySet()){
+            if(entry.getKey()[0] == centerVal || entry.getKey()[1]==centerVal){
+                toVisit.add(entry.getKey());
+            }
+        }
+        return toVisit;
+    }
+
 
     void putNumber(int num){
         int value = 1;
@@ -111,23 +135,5 @@ public class DominoDRW {
         number.put(num , value);
     }
 
-    int findNextNumber(int num, int num2){
-        for (Map.Entry<int[], Integer> entry: domino.entrySet()){
-            int[] key = entry.getKey();
-            if (entry.getKey()[0] == num && entry.getKey()[1] != num2 ){
-                int value = entry.getValue() - 1;
-                domino.remove(key);
-                if(value !=0)
-                    domino.put(key, value);
-                return key[1];
-            } else if ( entry.getKey()[1] == num && entry.getKey()[1] != num2){
-                int value = entry.getValue() - 1;
-                domino.remove(key);
-                if(value !=0)
-                    domino.put(key, value);
-                return key[0];
-            }
-        }
-        return -1;
-    }
+
 }
