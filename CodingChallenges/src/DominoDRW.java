@@ -14,7 +14,7 @@ public class DominoDRW {
 //        }
 
         // Seeded values
-        numbers = new int[]{3,4,3,4,1,2,2,4,6,5,3,5};
+        numbers = new int[]{2,3,2,3,2,3,2,3,3,3,3,3};
         DominoDRW obj = new DominoDRW();
         System.out.println(obj.isDominoPossible(numbers));
     }
@@ -59,7 +59,7 @@ public class DominoDRW {
         if (value !=0)
             domino.put(tempDup, value);
 
-        //System.out.println("The centeral pair: " + tempDup[0] + " " + tempDup[1]);
+        System.out.println("The centeral pair: " + tempDup[0] + " " + tempDup[1]);
 
         // Now take the center and find all the numbers
         // And then for each center value make 2 pass calls to find out the two dominos that can be placed as a bfs solution
